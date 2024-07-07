@@ -1,0 +1,13 @@
+version: "3.1"
+
+services:
+  postgres:
+    container_name: task_service_spring
+    image: postgres:14
+    ports:
+      - "5432:5432"
+
+    environment:
+      - POSTGRES_DB=task
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=111
