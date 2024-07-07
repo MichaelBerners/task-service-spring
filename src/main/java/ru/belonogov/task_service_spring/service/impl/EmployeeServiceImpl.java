@@ -93,7 +93,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Task task = taskService.findById(taskId);
         Employee employee = findById(employeeId);
         employee.addTask(task);
-        System.out.println();
         Employee update = employeeRepository.save(employee);
 
         return employeeMapper.employeeToEmployeeResponse(update);

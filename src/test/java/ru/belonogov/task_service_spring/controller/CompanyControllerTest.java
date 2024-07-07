@@ -22,6 +22,7 @@ import ru.belonogov.task_service_spring.service.CompanyService;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -44,7 +45,7 @@ class CompanyControllerTest {
     ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(companyController)
@@ -95,7 +96,11 @@ class CompanyControllerTest {
         CompanyResponse companyResponse = new CompanyResponse();
         companyResponse.setName("Lukoil");
 
-        when(companyService.update(any()))
+        when(companyService.update(argThat(arg -> {
+            assertThat(arg.getId()).isEqualTo(companyUpdateRequest.getId());
+            assertThat(arg.getName()).isEqualTo((companyUpdateRequest.getName()));
+            return true;
+        })))
                 .thenReturn(companyResponse);
 
         mockMvc.perform(post("/company/update")

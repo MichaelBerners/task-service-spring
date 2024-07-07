@@ -49,7 +49,7 @@ class EmployeeControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(employeeController)
@@ -70,9 +70,9 @@ class EmployeeControllerTest {
         employeeResponse.setRating(5);
 
         when(employeeService.save(argThat(arg -> {
-            assertThat(arg.getFirstName().equals(employeeRequest.getFirstName())).isTrue();
-            assertThat(arg.getLastName().equals(employeeRequest.getLastName())).isTrue();
-            assertThat(arg.getCompanyName().equals(employeeRequest.getCompanyName())).isTrue();
+            assertThat(arg.getFirstName()).isEqualTo(employeeRequest.getFirstName());
+            assertThat(arg.getLastName()).isEqualTo(employeeRequest.getLastName());
+            assertThat(arg.getCompanyName()).isEqualTo(employeeRequest.getCompanyName());
             return true;
         }))).thenReturn(employeeResponse);
 
@@ -142,8 +142,8 @@ class EmployeeControllerTest {
         employeeResponse.setCompanyName("Gazprom");
 
         when(employeeService.update(argThat(arg -> {
-            assertThat(arg.getId() == employeeUpdateRequest.getId()).isTrue();
-            assertThat(arg.getRating() == employeeUpdateRequest.getRating()).isTrue();
+            assertThat(arg.getId()).isEqualTo(employeeUpdateRequest.getId());
+            assertThat(arg.getRating()).isEqualTo(employeeUpdateRequest.getRating());
             return true;
         }))).thenReturn(employeeResponse);
 
@@ -171,8 +171,8 @@ class EmployeeControllerTest {
         employeeResponse.setCompanyName("Gazprom");
 
         when(employeeService.addNewTask(argThat(arg -> {
-            assertThat(arg.getEmployeeId() == taskEmployeeRequest.getEmployeeId()).isTrue();
-            assertThat(arg.getTaskId() == taskEmployeeRequest.getTaskId()).isTrue();
+            assertThat(arg.getEmployeeId()).isEqualTo(taskEmployeeRequest.getEmployeeId());
+            assertThat(arg.getTaskId()).isEqualTo(taskEmployeeRequest.getTaskId());
             return true;
         }))).thenReturn(employeeResponse);
 

@@ -30,7 +30,7 @@ public class CompanyController {
         return new ResponseEntity<>(companyResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping(value =  "/read/{companyName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value =  "/read/{companyName}")
     public ResponseEntity<CompanyResponse> read(@PathVariable String companyName) {
         CompanyResponse companyResponse = companyService.read(companyName);
 
@@ -38,14 +38,14 @@ public class CompanyController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<CompanyResponse> update(CompanyUpdateRequest companyUpdateRequest) {
+    public ResponseEntity<CompanyResponse> update(@RequestBody CompanyUpdateRequest companyUpdateRequest) {
         CompanyResponse companyResponse = companyService.update(companyUpdateRequest);
 
         return new ResponseEntity<>(companyResponse, HttpStatus.OK);
     }
 
     @PostMapping("/delete/{companyId}")
-    public void delete(@PathVariable(value = "companyId") Long companyId) {
+    public void delete(@PathVariable Long companyId) {
         companyService.delete(companyId);
     }
 }
