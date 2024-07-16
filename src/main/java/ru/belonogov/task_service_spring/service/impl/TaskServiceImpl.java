@@ -1,6 +1,7 @@
 package ru.belonogov.task_service_spring.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.belonogov.task_service_spring.domain.dto.mapper.TaskMapper;
 import ru.belonogov.task_service_spring.domain.dto.request.TaskEmployeeRequest;
 import ru.belonogov.task_service_spring.domain.dto.request.TaskRequest;
@@ -69,6 +70,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> findAllTaskByEmployee(Long id) {
+
+        return taskRepository.findAllByEmployee(id);
+    }
+
+    @Override
     public TaskResponse update(TaskUpdateRequest taskUpdateRequest) {
         Long id = taskUpdateRequest.getId();
         Task task = findById(id);
@@ -81,6 +88,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskResponse addNewEmployeeToTask(TaskEmployeeRequest taskEmployeeRequest) {
         Long taskId = taskEmployeeRequest.getTaskId();
         Long employeeId = taskEmployeeRequest.getEmployeeId();
@@ -93,8 +101,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Task task = findById(id);
+        List<Employee> allEmployeeByTask = employeeService.findAllEmployeeByTask(id);
+        allEmployeeByTask.stream()
+                .peek($ -> task.removeEmployee($))
+                .collect(Collectors.toSet());
         taskRepository.delete(task);
     }
 }

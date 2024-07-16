@@ -18,6 +18,8 @@ public interface TaskService {
 
     List<TaskResponse> findAllByEmployee(Long id);
 
+    List<Task> findAllTaskByEmployee(Long id);
+
     TaskResponse update(TaskUpdateRequest taskUpdateRequest);
 
     TaskResponse addNewEmployeeToTask(TaskEmployeeRequest taskEmployeeRequest);

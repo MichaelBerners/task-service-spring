@@ -23,12 +23,17 @@ public class Employee {
     @JoinColumn(name = "company_id")
     @JsonIgnoreProperties(value = "employees")
     private Company company;
-    @ManyToMany(mappedBy = "employees", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "employees", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Task> tasks;
 
     public void addTask(Task task) {
         this.tasks.add(task);
         task.getEmployees().add(this);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+        task.getEmployees().remove(this);
     }
 
     public Long getId() {

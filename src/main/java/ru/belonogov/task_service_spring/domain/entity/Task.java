@@ -20,7 +20,7 @@ public class Task {
     @Column(name = "task_status")
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "tasks_employee",
             joinColumns = {@JoinColumn(name = "task_id")},
@@ -30,6 +30,11 @@ public class Task {
     public void addEmployee(Employee employee) {
         this.employees.add(employee);
         employee.getTasks().add(this);
+    }
+
+    public void removeEmployee(Employee employee) {
+        this.employees.remove(employee);
+        employee.getTasks().remove(this);
     }
 
     @Override

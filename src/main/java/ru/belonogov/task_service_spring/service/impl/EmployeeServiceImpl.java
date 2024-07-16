@@ -2,6 +2,7 @@ package ru.belonogov.task_service_spring.service.impl;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.belonogov.task_service_spring.domain.dto.mapper.EmployeeMapper;
 import ru.belonogov.task_service_spring.domain.dto.request.EmployeeRequest;
 import ru.belonogov.task_service_spring.domain.dto.request.EmployeeUpdateRequest;
@@ -77,6 +78,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public List<Employee> findAllEmployeeByTask(Long taskId) {
+        List<Employee> allByTask = employeeRepository.findAllByTask(taskId);
+        return allByTask;
+    }
+
+    @Override
     public EmployeeResponse update(EmployeeUpdateRequest employeeUpdateRequest) {
         Long id = employeeUpdateRequest.getId();
         Employee employee = findById(id);
@@ -87,6 +94,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeResponse addNewTask(TaskEmployeeRequest taskEmployeeRequest) {
         Long taskId = taskEmployeeRequest.getTaskId();
         Long employeeId = taskEmployeeRequest.getEmployeeId();
@@ -99,8 +107,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Employee employee = findById(id);
+        taskService.findAllTaskByEmployee(id).stream()
+                .peek($ -> employee.removeTask($))
+                .collect(Collectors.toSet());
         employeeRepository.delete(employee);
     }
 }
